@@ -14,7 +14,7 @@ Esta extensão foi escolhida por dois motivos principais:
 * Esta visualização pode ser feita sem sair do seu browser já que o Github suporta arquivos com essa extensão.
 
 ### Organização
-Os conteúdos estão organizados por arquivos que agregam conteúdos relacionados. Tentarei ao máximo criar títulos que realmente traduzam o conteúdo veiculado facilitando assim a consulta. 
+Os conteúdos estão organizados por pastas de acordo com os frameworks e bibliotecas respectivos. Nos diretórios os arquivos agregam conteúdos relacionados. Tentarei ao máximo criar títulos que realmente traduzam o conteúdo veiculado facilitando assim a consulta. 
 
 Dentro de cada arquivo haverá um título principal referente ao tema global das anotações. Na sequência os títulos secundários servirão para referenciar as principais etapas para construção dos exemplos ou fundamentação das teorias. Já os títulos terciários serão os passos práticos mais específicos, exemplos de código e aplicações. Por fim, as observações e comentários servirão para comunicar curiosidades e informações interessantes para o desenvolvedor, relacionando os trechos de código com as explicações prévias.
 
