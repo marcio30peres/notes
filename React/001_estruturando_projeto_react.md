@@ -323,4 +323,66 @@ module.exports = {
 ...
 ```
 
+## Fast refresh
+Esta é uma funcionalidade muito interessante que permite recarregar o código no browser com alterações ao salvar porém mantendo o estado dos compnentes. Isso facilita correções no código e observar o comprtamento da aplicação com diferentes possibilidades de implementação em um mesmo estado.
+
+### Instalando dependências
+Através do link da biblioteca no github https://github.com/pmmmwh/react-refresh-webpack-plugin é possível seguir o tutorial de instalação conforme especificado pelo autor.
+
+### Atualizando webpack.config.js
+Primeiramente é necessário importar o plugin e atualizar esse parâmetro no arquivo de configurações habilitando-o para ambiente de desenvolvimento e setando a propriedade hot de devServer como true:
+
+```js
+const path = require('path')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
+const isDevelopment = process.env.NODE_ENV !== 'production'
+
+module.exports = {
+    mode: isDevelopment ? 'development' : 'production',
+    devtool: isDevelopment ? 'eval-source-map' : 'source-map',
+    entry: path.resolve(__dirname, 'src', 'index.jsx'),
+    output: {
+        path: path.resolve(__dirname, 'dist'),
+        filename: 'bundle.js'
+    },
+    resolve: {
+        extensions: ['.js', '.jsx']
+    },
+    module: {
+        rules: [
+            {
+                test: /\.jsx$/,
+                exclude: /node_modules/,
+                use: {
+                    loader: 'babel-loader',
+                    options: {
+                        plugins: [
+                            isDevelopment && require.resolve('react-refresh/babel')
+                        ].filter(Boolean)
+                    }
+                }
+            },
+            {
+                test: /\.scss$/,
+                exclude: /node_modules/,
+                use: ['style-loader', 'css-loader', 'sass-loader']
+            }
+        ]
+    },
+    plugins: [
+        isDevelopment && new ReactRefreshWebpackPlugin()
+        new HtmlWebpackPlugin({
+            template: path.resolve(__dirname, 'public', 'index.html')
+        })
+    //o filter serve para tratar o caso do ambiente de produção em que o 
+    //condicional acima deixaria o valor false dentro de plugins
+    ].filter(Boolean),
+    devServer: {
+        contentBase: path.resolve(__dirname, 'public'),
+        hot: true
+    }
+}
+```
+
 Agora a estrutura da aplicação está devidamente construída e pronta para a criação do primeiro componente react!
