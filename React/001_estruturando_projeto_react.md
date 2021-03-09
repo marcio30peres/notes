@@ -32,11 +32,11 @@ Este arquivo criado na raíz do projeto guarda as configurações do projeto. In
 
 ```js
 module.exports = {
-    pressets: [
+    presets: [
         '@babel/preset-env',
         ['@babel/preset-react', {
             //não é necessário fazer a importação do react em todas as páginas
-            runtime: 'autometic'
+            runtime: 'automatic'
         }]
     ]
 }
