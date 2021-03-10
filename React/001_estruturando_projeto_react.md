@@ -385,4 +385,112 @@ module.exports = {
 }
 ```
 
+## Typescript
+O typescript é um superset para a linguagem javascript que permite uma programação tipada, gerando muitas vantagens de organização e estruturação de código desde os menores teste até os maiores e mais complexos projetos.
+
+### Instalando dependências
+Para habilitar o typescript é necessário instalar as dependências typescript, @babel/preset-typescript e @types/react-dom. A typescript contém o core da linguagem. A @babel/preset-typescript permite que o babel entenda e renderize arquivos .ts e .tsx. Já a @types/react-dom adiciona as tipagens da biblioteca
+react-dom que não as possui por padrão. A instalação se faz pelo comando:
+
+```
+yarn add typescript @babel/preset-typescript @types/react-dom -D
+```
+
+Em seguida inicializa-se o typescript com o comando:
+```
+yarn tsc --init
+```
+
+Esse comando gera um arquivo tsconfig.json. Seu conteúdo contém uma série de parâmetros que definem o comportamento da linguagem. Seu conteúdo deve conter as seguintes linhas habilitadas:
+
+```js
+{
+  "compilerOptions": {
+    "lib": ["dom", "dom.Iterable", "esnext"],                                   
+    "allowJs": true,                             
+    "jsx": "preserve",                           
+    "noEmit": true,                              
+    "isolatedModules": true, 
+    "strict": true,                                 
+    "moduleResolution": "node",    
+    "resolveJsonModule": true,              
+    "allowSyntheticDefaultImports": true,        
+    "esModuleInterop": true,                        
+    "skipLibCheck": true,                           
+    "forceConsistentCasingInFileNames": true        
+  },
+  "include": ["src"]
+}
+```
+### Atualização do arquivo babel.config.js
+Nesse arquivo é necessário adicionar o presert-typescript previamente instalado, resultando no seguinte resultado final para o arquivo:
+
+```js
+module.exports = {
+    presets: [
+        '@babel/preset-env',
+        '@babel/preset-typescript',
+        ['@babel/preset-react', {
+            runtime: 'automatic'
+        }]
+    ]
+}
+```
+
+### Atualização do arquivo webpack.config.js
+Por fim, deve-se substituir as extensões jsx por tsx no parâmetro entry, adicionar as extensões .ts e .tsx no parâmetro extensions de resolve e por fim, modificar a expressão regular em modules para que trate não apenas arquivos .jsx, mas sim estes somados aos .tsx. O resultado final fica conforme a seguir:
+
+```js
+const path = require('path')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
+const isDevelopment = process.env.NODE_ENV !== 'production'
+
+module.exports = {
+    mode: isDevelopment ? 'development' : 'production',
+    devtool: isDevelopment ? 'eval-source-map' : 'source-map',
+    entry: path.resolve(__dirname, 'src', 'index.tsx'),
+    output: {
+        path: path.resolve(__dirname, 'dist'),
+        filename: 'bundle.js'
+    },
+    resolve: {
+        extensions: ['.js', '.jsx', '.ts', '.tsx']
+    },
+    module: {
+        rules: [
+            {
+                test: /\.(j|t)sx$/,
+                exclude: /node_modules/,
+                use: {
+                    loader: 'babel-loader',
+                    options: {
+                        plugins: [
+                            isDevelopment && require.resolve('react-refresh/babel')
+                        ].filter(Boolean)
+                    }
+                }
+            },
+            {
+                test: /\.scss$/,
+                exclude: /node_modules/,
+                use: ['style-loader', 'css-loader', 'sass-loader']
+            }
+        ]
+    },
+    plugins: [
+        isDevelopment && new ReactRefreshWebpackPlugin()
+        new HtmlWebpackPlugin({
+            template: path.resolve(__dirname, 'public', 'index.html')
+        })
+    //o filter serve para tratar o caso do ambiente de produção em que o 
+    //condicional acima deixaria o valor false dentro de plugins
+    ].filter(Boolean),
+    devServer: {
+        contentBase: path.resolve(__dirname, 'public'),
+        hot: true
+    }
+}
+```
+
 Agora a estrutura da aplicação está devidamente construída e pronta para a criação do primeiro componente react!
